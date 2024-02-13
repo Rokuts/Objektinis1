@@ -52,12 +52,12 @@ int main()
 
     double mediana;
     for(int i = 0; i < y; i++){
-        sort(S[i].n, S[i].n + x);
-        S[i].galutinisVid = (double(S[i].suma) / double(x)) * 0.4 + (S[i].egzas * 0.6);
+        sort(S[i].n, S[i].n + x);       //sortinu masyva nes medianai skaiciuot reikia rezultatu nuo maziausio iki didziausio;
+        S[i].galutinisVid = (double(S[i].suma) / double(x)) * 0.4 + (S[i].egzas * 0.6);     //galutinio vertinimo skaiciavimas su vidurkiu;
         if(x % 2 == 0)
             mediana = (S[i].n[x / 2] + S[i].n[x / 2 - 1]) / 2;
         else mediana = S[i].n[x / 2];
-        S[i].galutinisMed = mediana * 0.4 + (S[i].egzas * 0.6);
+        S[i].galutinisMed = mediana * 0.4 + (S[i].egzas * 0.6);     //galutinio vertinimo skaiciavimas su mediana;
     }
 
     int t;
@@ -70,7 +70,7 @@ int main()
     else 
         cout << left << setw(dydis[y - 1] + 3) << "Pavarde" << setw(dydis[y - 1] + 3) << "Vardas" << setw(dydis[y - 1] + 3) << "Galutinis (Med.)" << endl;
 
-    for(int i = 0; i < (dydis[y - 1] + 3) * 3; i++){
+    for(int i = 0; i < (dydis[y - 1] + 3) * 3; i++){        //pridetu pakankamai "-", kad gerai atrodytu lentele;
         cout<<"-";
     }
     cout << endl;
