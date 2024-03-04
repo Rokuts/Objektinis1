@@ -229,10 +229,12 @@ int main() {
         cout<<"Kiek yra studentu?"<<endl;
         cin>>studentu_kiekis;
 
+
         for(int i=0;i<studentu_kiekis;i++){
+            cout<<"Vardas, pavarde: ";
             string vardas=vardai[atsitiktinis_skaicius(0,vardai_kiekis-1)];      //vardai[atsitiktinis_skaicius(0,14)];
             string pavarde=pavardes[atsitiktinis_skaicius(0,pavardes_kiekis-1)];      //pavardes[atsitiktinis_skaicius(0,19)];
-
+            cout<<vardas<<", "<<pavarde<<endl;
             S.vardai.push_back(vardas);
             S.pavardes.push_back(pavarde);
 
@@ -244,16 +246,20 @@ int main() {
 
             int suma=0;
             S.pazymiai.clear();
+            cout<<"Pazymiai: ";
             for(int i=0;i<pazymiu_kiekis;i++){
                 int pazymys=atsitiktinis_pazymys();
+                cout<<pazymys<<" ";
                 S.pazymiai.push_back(pazymys);
                 suma+=pazymys;
 
             }
+            cout<<endl;
 
             //----------------------------------------------
             //Ivedamas studento egzamino rezultatas
             int egzas=atsitiktinis_pazymys();
+            cout<<"Egzamino pazymys: "<<egzas<<endl;
 
             //----------------------------------------------
             //Skaiciujami galutiniai rezultatai
