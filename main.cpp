@@ -14,6 +14,36 @@ struct Student {
 int main() {
     Student S;
 
+    meniu:
+    cout<<"Pasirinkite ivedimo rezima:"<<endl;
+    cout<<"1. Ivedimas ranka;"<<endl;
+    cout<<"2. Generuoti pazymius;"<<endl;
+    cout<<"3. Generuoti pazymius, vardus, pavardes;"<<endl;
+    cout<<"4. Baigti darba."<<endl;
+
+    char pasirinkimas;
+    cin>>pasirinkimas;
+
+    switch(pasirinkimas){
+    case '1':
+        cout<<"Tu pasirinkai pirma varianta."<<endl;
+        break;
+    case '2':
+        cout<<"Tu pasirinkai antra varianta."<<endl;
+        break;
+    case '3':
+        cout<<"Tu pasirinkai trecia varianta."<<endl;
+        break;
+    case '4':
+        cout<<"Tu pasirinkai ketvirta varianta."<<endl;
+        break;
+    default:
+        cout<<"Tokio varianto nera."<<endl;
+        goto meniu;
+    }
+
+
+
     int studentu_kiekis = 1;      //nuo 1, nes klausiant studento vardo butu numeruojama nuo 1;
 
     //Ivedinejame studentu vardus ir pavardes tol kol ivedamas NE.
