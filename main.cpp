@@ -2,7 +2,8 @@
 #include <vector>
 #include <algorithm>
 #include <iomanip>
-#include <cstdlib>
+#include <cstdlib>  //random
+#include <cctype> // darbas su simboliais
 
 using namespace std;
 
@@ -11,6 +12,15 @@ struct Student {
     vector <int> pazymiai;
     vector <double> galutiniaiVid, galutiniaiMed;
 };
+
+bool ar_tik_raides(const string& zodis) {
+    for (char simbolis : zodis) {
+        if (!isalpha(simbolis)) {
+            return false;
+        }
+    }
+    return true;
+}
 
 const int vardai_kiekis=15;
 const int pavardes_kiekis=20;
@@ -83,15 +93,28 @@ int main() {
 
         //Ivedinejame studentu vardus ir pavardes tol kol ivedamas NE.
         while (true) {
-            cout << "Iveskite " << studentu_kiekis << "-o studento varda ir pavarde arba 'NE' jeigu nebera daugiau studentu." << endl;
+            cout << "Iveskite " << studentu_kiekis << "-o studento duomenis. Jei norite nutraukti parasykite 'NE'." << endl;
             string vardas, pavarde;
-            cin >> vardas;
+
+            while(true){
+                cout<<"Iveskite studento varda: ";
+                cin>>vardas;
+                if(ar_tik_raides(vardas))
+                    break;
+                cout<<"!!!Rasta klaida!!! Bandykite dar karta."<<endl;
+            }
 
             if (vardas == "NE") {
                 break;
             }
 
-            cin >> pavarde;
+            while(true){
+                cout<<"Iveskite studento pavarde: ";
+                cin>>pavarde;
+                if(ar_tik_raides(pavarde))
+                    break;
+                cout<<"!!!Rasta klaida!!! Bandykite dar karta."<<endl;
+            }
 
             if (pavarde == "NE") {
                 break;
@@ -104,24 +127,59 @@ int main() {
 
             //--------------------------------------------------------------------------------
             //Ivedinejame pazymius
+
+            ivesti_pazymius:
             S.pazymiai.clear();
             cout << "Iveskite studento namu darbu pazymius. Pabaigus juos vardyt, parasykite '-1'." << endl;
             int pazymys, suma = 0, pazymiu_kiekis = 0;
             while (true) {
                 cin >> pazymys;
+
+                if(cin.fail()){
+                    cin.clear();
+                    cin.ignore(numeric_limits<streamsize>::max(), '\n');    //isvalome is atminties likusia vartotojo ivesti;
+                    cout<<"!!!Klaida. Netinkama skaiciaus ivestis!!!"<<endl;
+                    goto ivesti_pazymius;
+                }
+
                 if (pazymys == -1) {
                     break;
                 }
                 suma += pazymys;
                 S.pazymiai.push_back(pazymys);
                 pazymiu_kiekis++;
+                if(pazymys>10||pazymys<0){
+                    cout<<"!!!Klaida, pazymiu intervalas 1-10!!!"<<endl;
+                    cin.ignore(numeric_limits<streamsize>::max(), '\n');    //isvalome is atminties likusia vartotojo ivesti;
+                    goto ivesti_pazymius;
+                }
+
             }
+            if(pazymiu_kiekis==0){
+                cout<<"Pamirsote ivesti pazymius."<<endl;
+                goto ivesti_pazymius;
+            }
+
+
 
             //----------------------------------------------
             //Ivedamas studento egzamino rezultatas
+            ivesti_egza:
             int egzas;
             cout << "Iveskite studento egzamino pazymi." << endl;
             cin >> egzas;
+            if(cin.fail()){
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');    //isvalome is atminties likusia vartotojo ivesti;
+                cout<<"!!!Klaida. Netinkama skaiciaus ivestis!!!"<<endl;
+                goto ivesti_egza;
+            }
+
+            if(egzas>10||egzas<0){
+                cout<<"!!!Klaida, pazymiu intervalas 1-10!!!"<<endl;
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');    //isvalome is atminties likusia vartotojo ivesti;
+                goto ivesti_egza;
+            }
 
             //----------------------------------------------
             //Skaiciujami galutiniai rezultatai
@@ -155,15 +213,28 @@ int main() {
 
         //Ivedinejame studentu vardus ir pavardes tol kol ivedamas NE.
         while (true) {
-            cout << "Iveskite " << studentu_kiekis << "-o studento varda ir pavarde arba 'NE' jeigu nebera daugiau studentu." << endl;
+            cout << "Iveskite " << studentu_kiekis << "-o studento duomenis. Jei norite nutraukti parasykite 'NE'." << endl;
             string vardas, pavarde;
-            cin >> vardas;
+
+            while(true){
+                cout<<"Iveskite studento varda: ";
+                cin>>vardas;
+                if(ar_tik_raides(vardas))
+                    break;
+                cout<<"!!!Rasta klaida!!! Bandykite dar karta."<<endl;
+            }
 
             if (vardas == "NE") {
                 break;
             }
 
-            cin >> pavarde;
+            while(true){
+                cout<<"Iveskite studento pavarde: ";
+                cin>>pavarde;
+                if(ar_tik_raides(pavarde))
+                    break;
+                cout<<"!!!Rasta klaida!!! Bandykite dar karta."<<endl;
+            }
 
             if (pavarde == "NE") {
                 break;
@@ -176,9 +247,23 @@ int main() {
 
             //--------------------------------------------------------------------------------
             //Ivedinejame pazymius
+            kiekis_pazimiu:
             int pazymiu_kiekis;
             cout<<"Kiek pazymiu studentui sugeneruoti?"<<endl;
             cin>>pazymiu_kiekis;
+
+            if(cin.fail()){
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');    //isvalome is atminties likusia vartotojo ivesti;
+                cout<<"!!!Klaida. Netinkama skaiciaus ivestis!!!"<<endl;
+                goto kiekis_pazimiu;
+            }
+
+            if(pazymiu_kiekis<1){
+                cout<<"!!!Klaida, pazymiu kiekis naturalus skaicius!!!"<<endl;
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');    //isvalome is atminties likusia vartotojo ivesti;
+                goto kiekis_pazimiu;
+            }
 
             int suma=0;
             S.pazymiai.clear();
@@ -225,9 +310,23 @@ int main() {
         {
         cout<<"Tu pasirinkai trecia varianta."<<endl;
 
+        kiekis_studentu:
         int studentu_kiekis;
         cout<<"Kiek yra studentu?"<<endl;
         cin>>studentu_kiekis;
+
+        if(cin.fail()){
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');    //isvalome is atminties likusia vartotojo ivesti;
+            cout<<"!!!Klaida. Netinkama skaiciaus ivestis!!!"<<endl;
+            goto kiekis_studentu;
+        }
+
+        if(studentu_kiekis<0){
+            cout<<"!!!Klaida, studentu kiekis naturalus skaicius arba 0!!!"<<endl;
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');    //isvalome is atminties likusia vartotojo ivesti;
+            goto kiekis_studentu;
+        }
 
 
         for(int i=0;i<studentu_kiekis;i++){
@@ -241,8 +340,22 @@ int main() {
             //--------------------------------------------------------------------------------
             //Ivedinejame pazymius
             int pazymiu_kiekis;
+            pazkiek:
             cout<<"Kiek pazymiu studentui sugeneruoti?"<<endl;
             cin>>pazymiu_kiekis;
+
+            if(cin.fail()){
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');    //isvalome is atminties likusia vartotojo ivesti;
+                cout<<"!!!Klaida. Netinkama skaiciaus ivestis!!!"<<endl;
+                goto pazkiek;
+            }
+
+            if(pazymiu_kiekis<1){
+                cout<<"!!!Klaida, pazymiu kiekis naturalus skaicius!!!"<<endl;
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');    //isvalome is atminties likusia vartotojo ivesti;
+                goto pazkiek;
+            }
 
             int suma=0;
             S.pazymiai.clear();
