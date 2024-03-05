@@ -29,15 +29,15 @@ static const string vardai[] = {
 
     "Dominykas", "Deividas", "Matas", "Lukas", "Nojus",
     "Erikas", "Danielis", "Tomas", "Mindaugas", "Edvinas",
-    "Gabrielius", "Martynas", "Mantas", "Ąžuolas", "Benas"
+    "Gabrielius", "Martynas", "Mantas", "Azuolas", "Benas"
 };
 
 static const string pavardes[] = {
 
-    "Kazlauskas", "Petrauskas", "Jankauskas", "Antanaitis", "Bakšys",
-    "Balčiūnas", "Baranauskas", "Bartkus", "Dambrauskas", "Gudauskas",
-    "Kavaliauskas", "Kazakevičius", "Lukauskas", "Mačiulis", "Navickas",
-    "Paulauskas", "Rutkauskas", "Šimkus", "Urbonas", "Valentukevičius"
+    "Kazlauskas", "Petrauskas", "Jankauskas", "Antanaitis", "Baksys",
+    "Balciunas", "Baranauskas", "Bartkus", "Dambrauskas", "Gudauskas",
+    "Kavaliauskas", "Kazakevicius", "Lukauskas", "Maciulis", "Navickas",
+    "Paulauskas", "Rutkauskas", "Simkus", "Urbonas", "Valentukevicius"
 };
 
 int atsitiktinis_skaicius(int min, int max) {
