@@ -402,9 +402,24 @@ int main() {
 
         cout<<"Tu pasirinkai ketvirta varianta."<<endl;
 
+        Vidmed:
         int t;
         cout << "Jei lenteleje norite galutinio vidurkio spauskite 0, jei medianos - 1" << endl;
         cin >> t;
+
+        if(cin.fail()){
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');    //isvalome is atminties likusia vartotojo ivesti;
+            cout<<"!!!Klaida. Netinkama skaiciaus ivestis!!!"<<endl;
+            goto Vidmed;
+        }
+
+        if(t!=0&&t!=1){
+            cout<<"!!!Klaida, iveskite 0 arba 1!!!"<<endl;
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');    //isvalome is atminties likusia vartotojo ivesti;
+            goto Vidmed;
+        }
+
         cout << endl;
 
         if(t == 0)
