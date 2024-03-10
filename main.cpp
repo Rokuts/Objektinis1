@@ -1,5 +1,4 @@
 #include <iostream>
-#include <vector>
 #include <algorithm>
 #include <iomanip>
 #include <cstdlib>  //random
@@ -7,11 +6,49 @@
 
 using namespace std;
 
-struct Student {
-    vector <string> vardai, pavardes;
-    vector <int> pazymiai;
-    vector <double> galutiniaiVid, galutiniaiMed;
+struct Studentas {
+    string vardas, pavarde;
+    int* pazymiai;
+    int pazymiu_kiekis;
+    double galutiniaiVid, galutiniaiMed;
 };
+
+struct Universitetas{
+    Studentas* studentai;
+    int studentu_kiekis;
+};
+
+void add_student_uni(Universitetas& uni, Studentas& stud){
+    uni.studentu_kiekis++;
+    Studentas* new_studentai= new Studentas[uni.studentu_kiekis];       //susikurem nauja masyva, kuris yra seno dydis+1;
+
+    for(int i=0;i<uni.studentu_kiekis-1;i++){           //perkeliame is seno masyvo i nauja, jau esamus studentus (kas nepasimestu duomenys);
+        new_studentai[i]=uni.studentai[i];
+    }
+
+    new_studentai[uni.studentu_kiekis-1]=stud;          //itraukiamas naujas studentas i masyvo gala;
+
+    if(uni.studentai!=nullptr){                         //atlaisviname vieta atmintyje;
+        delete[] uni.studentai;
+    } 
+    uni.studentai=new_studentai;                        //priskiriame nauja masyva kaip pagrindini universiteto masyva su visais pries tai itrauktais duomenimis;
+}
+
+void add_mark_stud(Studentas& stud, int& pazymys){
+    stud.pazymiu_kiekis++;
+    int* new_pazymiai = new int[stud.pazymiu_kiekis];       //susikurem nauja masyva, kuris yra seno dydis+1;
+
+    for(int i=0;i<stud.pazymiu_kiekis-1;i++){           //perkeliame is seno masyvo i nauja, jau esamus pazymius (kas nepasimestu duomenys);
+        new_pazymiai[i]=stud.pazymiai[i];
+    }
+
+    new_pazymiai[stud.pazymiu_kiekis-1]=pazymys;          //itraukiamas naujas pazymys i masyvo gala;
+
+    if(stud.pazymiai!=nullptr){                         //atlaisviname vieta atmintyje;
+        delete[] stud.pazymiai;
+    } 
+    stud.pazymiai=new_pazymiai;                        //priskiriame nauja masyva kaip pagrindini studento masyva su visais pries tai itrauktais duomenimis;
+}
 
 bool ar_tik_raides(const string& zodis) {
     for (char simbolis : zodis) {
@@ -71,7 +108,7 @@ int atsitiktinis_pazymys() {
 int main() {
     srand(static_cast<unsigned int>(time(0)));     //Kiekvienu random generuojami skaiciai yra kitokie;
 
-    Student S;
+    Universitetas Uni={nullptr,0};      //del saugumo, kad tuscias universitetas(struktura);
 
     meniu:
     cout<<"Pasirinkite ivedimo rezima:"<<endl;
@@ -120,8 +157,8 @@ int main() {
                 break;
             }
 
-            S.vardai.push_back(vardas);
-            S.pavardes.push_back(pavarde);
+
+            Studentas stud={vardas,pavarde,nullptr,0,0,0};        //vardas ir pavarde egzistuoja, o pazymiai(nullptr), pazymiu kiekis, mediana, vidurki nunulinam;
 
             studentu_kiekis++;
 
@@ -129,7 +166,7 @@ int main() {
             //Ivedinejame pazymius
 
             ivesti_pazymius:
-            S.pazymiai.clear();
+
             cout << "Iveskite studento namu darbu pazymius. Pabaigus juos vardyt, parasykite '-1'." << endl;
             int pazymys, suma = 0, pazymiu_kiekis = 0;
             while (true) {
@@ -146,7 +183,8 @@ int main() {
                     break;
                 }
                 suma += pazymys;
-                S.pazymiai.push_back(pazymys);
+                add_mark_stud(stud,pazymys);
+                
                 pazymiu_kiekis++;
                 if(pazymys>10||pazymys<0){
                     cout<<"!!!Klaida, pazymiu intervalas 1-10!!!"<<endl;
@@ -185,19 +223,21 @@ int main() {
             //Skaiciujami galutiniai rezultatai
             double galutinisVid;
             galutinisVid = (double(suma) / double(pazymiu_kiekis)) * 0.4 + egzas * 0.6;
-            S.galutiniaiVid.push_back(galutinisVid);
+            stud.galutiniaiVid=galutinisVid;
 
             double galutinisMed, mediana;
-            sort(S.pazymiai.begin(), S.pazymiai.end());
+            sort(stud.pazymiai, stud.pazymiai+stud.pazymiu_kiekis);
             if(pazymiu_kiekis % 2 == 0){
-                mediana = (S.pazymiai[pazymiu_kiekis / 2] + S.pazymiai [pazymiu_kiekis / 2 - 1]) / 2.0;
+                mediana = (stud.pazymiai[pazymiu_kiekis / 2] + stud.pazymiai[pazymiu_kiekis / 2 - 1]) / 2.0;
             }
 
 
-            else mediana = S.pazymiai[pazymiu_kiekis / 2];
+            else mediana = stud.pazymiai[pazymiu_kiekis / 2];
             galutinisMed = mediana * 0.4 + egzas * 0.6;
-            S.galutiniaiMed.push_back(galutinisMed);
+            stud.galutiniaiMed=galutinisMed;
             cout << endl;
+
+            add_student_uni(Uni,stud);
 
         }
         cout << endl;
@@ -240,8 +280,7 @@ int main() {
                 break;
             }
 
-            S.vardai.push_back(vardas);
-            S.pavardes.push_back(pavarde);
+            Studentas stud={vardas,pavarde,nullptr,0,0,0};
 
             studentu_kiekis++;
 
@@ -266,11 +305,11 @@ int main() {
             }
 
             int suma=0;
-            S.pazymiai.clear();
+            
             cout<<"Pazymiai: ";
             for(int i=0;i<pazymiu_kiekis;i++){
                 int pazymys=atsitiktinis_pazymys();
-                S.pazymiai.push_back(pazymys);
+                add_mark_stud(stud,pazymys);
                 cout<<pazymys<<" ";
                 suma+=pazymys;
 
@@ -286,19 +325,22 @@ int main() {
             //Skaiciujami galutiniai rezultatai
             double galutinisVid;
             galutinisVid = (double(suma) / double(pazymiu_kiekis)) * 0.4 + egzas * 0.6;
-            S.galutiniaiVid.push_back(galutinisVid);
+            stud.galutiniaiVid=galutinisVid;
 
             double galutinisMed, mediana;
-            sort(S.pazymiai.begin(), S.pazymiai.end());
+            sort(stud.pazymiai, stud.pazymiai+stud.pazymiu_kiekis);
             if(pazymiu_kiekis % 2 == 0){
-                mediana = (S.pazymiai[pazymiu_kiekis / 2] + S.pazymiai [pazymiu_kiekis / 2 - 1]) / 2.0;
+                mediana = (stud.pazymiai[pazymiu_kiekis / 2] + stud.pazymiai[pazymiu_kiekis / 2 - 1]) / 2.0;
             }
 
 
-            else mediana = S.pazymiai[pazymiu_kiekis / 2];
+            else mediana = stud.pazymiai[pazymiu_kiekis / 2];
             galutinisMed = mediana * 0.4 + egzas * 0.6;
-            S.galutiniaiMed.push_back(galutinisMed);
+            stud.galutiniaiMed=galutinisMed;
             cout << endl;
+
+            add_student_uni(Uni,stud);
+
 
         }
         cout << endl;
@@ -334,8 +376,8 @@ int main() {
             string vardas=vardai[atsitiktinis_skaicius(0,vardai_kiekis-1)];      //vardai[atsitiktinis_skaicius(0,14)];
             string pavarde=pavardes[atsitiktinis_skaicius(0,pavardes_kiekis-1)];      //pavardes[atsitiktinis_skaicius(0,19)];
             cout<<vardas<<", "<<pavarde<<endl;
-            S.vardai.push_back(vardas);
-            S.pavardes.push_back(pavarde);
+            
+            Studentas stud={vardas,pavarde,nullptr,0,0,0};
 
             //--------------------------------------------------------------------------------
             //Ivedinejame pazymius
@@ -358,12 +400,12 @@ int main() {
             }
 
             int suma=0;
-            S.pazymiai.clear();
+            
             cout<<"Pazymiai: ";
             for(int i=0;i<pazymiu_kiekis;i++){
                 int pazymys=atsitiktinis_pazymys();
                 cout<<pazymys<<" ";
-                S.pazymiai.push_back(pazymys);
+                add_mark_stud(stud,pazymys);
                 suma+=pazymys;
 
             }
@@ -378,19 +420,21 @@ int main() {
             //Skaiciujami galutiniai rezultatai
             double galutinisVid;
             galutinisVid = (double(suma) / double(pazymiu_kiekis)) * 0.4 + egzas * 0.6;
-            S.galutiniaiVid.push_back(galutinisVid);
+            stud.galutiniaiVid=galutinisVid;
 
             double galutinisMed, mediana;
-            sort(S.pazymiai.begin(), S.pazymiai.end());
+            sort(stud.pazymiai,stud.pazymiai+stud.pazymiu_kiekis);
             if(pazymiu_kiekis % 2 == 0){
-                mediana = (S.pazymiai[pazymiu_kiekis / 2] + S.pazymiai [pazymiu_kiekis / 2 - 1]) / 2.0;
+                mediana = (stud.pazymiai[pazymiu_kiekis / 2] + stud.pazymiai [pazymiu_kiekis / 2 - 1]) / 2.0;
             }
 
 
-            else mediana = S.pazymiai[pazymiu_kiekis / 2];
+            else mediana = stud.pazymiai[pazymiu_kiekis / 2];
             galutinisMed = mediana * 0.4 + egzas * 0.6;
-            S.galutiniaiMed.push_back(galutinisMed);
+            stud.galutiniaiMed=galutinisMed;
             cout << endl;
+
+            add_student_uni(Uni,stud);
         }
         cout << endl;
         goto meniu;
@@ -432,11 +476,11 @@ int main() {
         }
         cout << endl;
 
-        for(int i = 0; i < S.vardai.size(); i++){
+        for(int i = 0; i < Uni.studentu_kiekis; i++){
             if(t == 0)
-                cout << left << setw(20) << S.pavardes[i] << setw(20) << S.vardai[i] << setw(20) << fixed <<setprecision(2) << S.galutiniaiVid[i] << endl;
+                cout << left << setw(20) << Uni.studentai[i].pavarde << setw(20) << Uni.studentai[i].vardas << setw(20) << fixed <<setprecision(2) << Uni.studentai[i].galutiniaiVid << endl;
             else
-                cout << left << setw(20) << S.pavardes[i] << setw(20) << S.vardai[i] << setw(20) << fixed <<setprecision(2) << S.galutiniaiMed[i] << endl;
+                cout << left << setw(20) << Uni.studentai[i].pavarde << setw(20) << Uni.studentai[i].vardas << setw(20) << fixed <<setprecision(2) << Uni.studentai[i].galutiniaiMed << endl;
         }
 
         break;
